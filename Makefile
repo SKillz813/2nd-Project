@@ -1,26 +1,31 @@
-# Makefile
+# Ορισμός του compiler και των σημαιών
+CC = gcc                     # Ο compiler που θα χρησιμοποιηθεί
+CFLAGS = -Wall -Wextra -g    # Σημαίες για προειδοποιήσεις και debugging
 
-```makefile
-# Ορισμός μεταβλητών
-CC = gcc
-CFLAGS = -Wall -Wextra -g
-SRC = src/main.c src/functions.c
-OBJ = $(SRC:.c=.o)
-EXEC = build/eshop
+# Στόχοι
+TARGET = program             # Το όνομα του τελικού εκτελέσιμου αρχείου
+OBJS = main.o functions.o    # Λίστα με τα αρχεία αντικειμένου (object files)
 
-# Κανόνας μεταγλώττισης
-all: $(EXEC)
+# Προεπιλεγμένος στόχος
+all: $(TARGET)
 
-$(EXEC): $(OBJ)
-	mkdir -p build
-	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
+# Κανόνας για τη δημιουργία του εκτελέσιμου αρχείου
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)  # Σύνδεση των object files και δημιουργία του εκτελέσιμου
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Κανόνας για τη μεταγλώττιση του main.c
+main.o: main.c functions.h
+	$(CC) $(CFLAGS) -c main.c             # Μεταγλώττιση του main.c σε αρχείο αντικειμένου
 
-# Κανόνας καθαρισμού
+# Κανόνας για τη μεταγλώττιση του functions.c
+functions.o: functions.c functions.h
+	$(CC) $(CFLAGS) -c functions.c        # Μεταγλώττιση του functions.c σε αρχείο αντικειμένου
+
+# Κανόνας για καθαρισμό των παραγόμενων αρχείων
 clean:
-	rm -rf $(OBJ) $(EXEC)
+	rm -f $(TARGET) $(OBJS)               # Διαγραφή του εκτελέσιμου και των αρχείων αντικειμένου
 
-.PHONY: all clean
+# Κανόνας για την εκτέλεση του προγράμματος
+run: all
+	./$(TARGET)                          
 
