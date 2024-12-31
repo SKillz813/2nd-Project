@@ -8,26 +8,29 @@
 
 int main() {
     Product catalog[PRODUCT_COUNT];
+    // Αρχικοποίηση του καταλόγου προϊόντων
     initialize_catalog(catalog);
 
-    int server_pipe[CLIENT_COUNT][2];
-    int client_pipe[CLIENT_COUNT][2];
-
+    int server_pipe[CLIENT_COUNT][2]; // Pipes για επικοινωνία των πελατών με το κατάστημα
+    int client_pipe[CLIENT_COUNT][2]; // Pipes για αποστολή απαντήσεων στους πελάτες
+    
+    // Δημιουργία των pipes
     for (int i = 0; i < CLIENT_COUNT; i++) {
         if (pipe(server_pipe[i]) == -1 || pipe(client_pipe[i]) == -1) {
-            perror("pipe");
+            perror("pipe"); // Εμφάνιση σφάλματος σε περίπτωση αποτυχίας
             exit(EXIT_FAILURE);
         }
     }
-
+     // Εμφάνιση σφάλματος σε περίπτωση αποτυχίας
     for (int i = 0; i < CLIENT_COUNT; i++) {
         pid_t pid = fork();
         if (pid == -1) {
-            perror("fork");
+            perror("fork"); // Εμφάνιση σφάλματος σε περίπτωση αποτυχίας του fork
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
+            // Λειτουργία πελάτη
             client_process(i, server_pipe[i], client_pipe[i]);
-            exit(EXIT_SUCCESS);
+            exit(EXIT_SUCCESS); // Τερματισμός της διεργασίας πελάτη
         }
     }
 
@@ -46,7 +49,7 @@ int main() {
             }
         }
     }
-
+    // Δημιουργία αναφοράς μετά την ολοκλήρωση όλων των παραγγελιών
     generate_report(catalog);
 
     for (int i = 0; i < CLIENT_COUNT; i++) {
