@@ -5,17 +5,19 @@
 #include <time.h>
 #include "functions.h"
 
+// Αρχικοποίηση του καταλόγου προϊόντων
 void initialize_catalog(Product catalog[]) {
     for (int i = 0; i < PRODUCT_COUNT; i++) {
         snprintf(catalog[i].description, 50, "Product %d", i);
-        catalog[i].price = (float)(rand() % 100 + 1);
+        catalog[i].price = (float)(rand() % 100 + 1); // Τυχαία τιμή
         catalog[i].item_count = 2;
         catalog[i].requests = 0;
         catalog[i].sold = 0;
-        catalog[i].failed_clients[0] = '\0';
+        catalog[i].failed_clients[0] = '\0';  // Αρχικοποίηση κενής λίστας
     }
 }
 
+// Διαχείριση παραγγελίας πελάτη
 void handle_order(int client_id, int product_id, Product catalog[], int client_pipe[2]) {
     char response[BUFFER_SIZE];
 
@@ -32,6 +34,7 @@ void handle_order(int client_id, int product_id, Product catalog[], int client_p
     write(client_pipe[1], response, strlen(response) + 1);
 }
 
+// Δημιουργία αναφοράς προϊόντων
 void generate_report(Product catalog[]) {
     printf("\n--- Final Report ---\n");
 
