@@ -1,31 +1,37 @@
-# Ορισμός του compiler και των σημαιών
-CC = gcc                     # Ο compiler που θα χρησιμοποιηθεί
-CFLAGS = -Wall -Wextra -g    # Σημαίες για προειδοποιήσεις και debugging
+# Ορισμός compiler και σημαιών
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11
 
-# Στόχοι
-TARGET = program             # Το όνομα του τελικού εκτελέσιμου αρχείου
-OBJS = main.o functions.o    # Λίστα με τα αρχεία αντικειμένου (object files)
+# Φάκελοι 
+SRC_DIR = src # Πηγαίος κώδικας
+INC_DIR = include # Ηeader files
+OBJ_DIR = obj # Αρχεία αντικειμένων 
 
-# Προεπιλεγμένος στόχος
-all: $(TARGET)
+# Πηγαία και Αντικείμενα αρχεία
+SOURCES = $(wildcard $(SRC_DIR)/*.c) # Όλα τα αρχεία .c στο φάκελο src
+OBJECTS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SOURCES)) # Τα αντικείμενα αρχεία που παράγονται από τα πηγαία
 
-# Κανόνας για τη δημιουργία του εκτελέσιμου αρχείου
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)  # Σύνδεση των object files και δημιουργία του εκτελέσιμου
+# Εκτελέσιμο Αρχείο
+OUT = project
 
-# Κανόνας για τη μεταγλώττιση του main.c
-main.o: main.c functions.h
-	$(CC) $(CFLAGS) -c main.c             # Μεταγλώττιση του main.c σε αρχείο αντικειμένου
+# Default Target
+all: $(OUT) # Δημιουργία εκτελέσιμου αρχείου
 
-# Κανόνας για τη μεταγλώττιση του functions.c
-functions.o: functions.c functions.h
-	$(CC) $(CFLAGS) -c functions.c        # Μεταγλώττιση του functions.c σε αρχείο αντικειμένου
+# Σύνδεση αντικειμένων για δημιουργία εκτελέσιμου
+$(OUT): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# Κανόνας για καθαρισμό των παραγόμενων αρχείων
+# Μεταγλώττιση κάθε πηγαίου αρχείου σε αντικέιμενο
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+
+# Δημιουργία φακέλου αντικειμένων αν δεν υπάρχει
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+# Καθαρισμός των δημιουργημένων αρχείων
 clean:
-	rm -f $(TARGET) $(OBJS)               # Διαγραφή του εκτελέσιμου και των αρχείων αντικειμένου
+	rm -rf $(OBJ_DIR) $(OUT)
 
-# Κανόνας για την εκτέλεση του προγράμματος
-run: all
-	./$(TARGET)                          
-
+# Phony Target 
+.PHONY: all clean
