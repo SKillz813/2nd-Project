@@ -13,11 +13,11 @@ void client_process(int client_id, int server_pipe[2], int client_pipe[2]) {
     close(client_pipe[1]);
 
     for (int j = 0; j < ORDERS_PER_CLIENT; j++) {
-        int product_id = rand() % PRODUCT_COUNT;
-        write(server_pipe[1], &product_id, sizeof(int));
+        int product_id = rand() % PRODUCT_COUNT; //επιλέγει τυχαιο προιον για παραγγελια
+        write(server_pipe[1], &product_id, sizeof(int)); // στελνει παραγγελια μεσω pipe
 
         char response[BUFFER_SIZE];
-        read(client_pipe[0], response, BUFFER_SIZE);
+        read(client_pipe[0], response, BUFFER_SIZE); // λαμαβανει την απαντηση απο τον server
         printf("Client %d received: %s\n", client_id, response);
 
         sleep(1);
