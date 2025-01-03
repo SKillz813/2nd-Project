@@ -20,5 +20,5 @@ void handle_order(int client_id, int product_id, Product catalog[], int client_p
         snprintf(catalog[product_id].failed_clients + strlen(catalog[product_id].failed_clients), BUFFER_SIZE - strlen(catalog[product_id].failed_clients), "Client %d ", client_id);
     } // αλλιως προσθετει τον πελάτη στην λιστα τον αποτυχημένων
 
-    write(client_pipe[1], response, strlen(response) + 1);
+    write(client_pipe[1], response, strlen(response) + 1); // αποστέλει μηνυμα απάντησης στον πελάτη
 }
