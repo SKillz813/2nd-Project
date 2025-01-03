@@ -39,7 +39,7 @@ int main() {
         close(client_pipe[i][0]);
     }
 
-    for (int orders_remaining = CLIENT_COUNT * ORDERS_PER_CLIENT; orders_remaining > 0;) {
+    for (int orders_remaining = CLIENT_COUNT * ORDERS_PER_CLIENT; orders_remaining > 0;) { //Διαβάζει παραγγελίες από κάθε πελάτη και επεξεργαζεται μέχρι να ολοκληρωθούν όλες
         for (int i = 0; i < CLIENT_COUNT; i++) {
             int product_id;
             if (read(server_pipe[i][0], &product_id, sizeof(int)) > 0) {
