@@ -22,6 +22,7 @@ int main() {
         }
     }
      // Εμφάνιση σφάλματος σε περίπτωση αποτυχίας
+     //Δημιουργει μία νέα διεργασία για κάθε πελάτη
     for (int i = 0; i < CLIENT_COUNT; i++) {
         pid_t pid = fork();
         if (pid == -1) {
@@ -33,7 +34,7 @@ int main() {
             exit(EXIT_SUCCESS); // Τερματισμός της διεργασίας πελάτη
         }
     }
-
+    //Κλείσιμο pipe στον Γονέα
     for (int i = 0; i < CLIENT_COUNT; i++) {
         close(server_pipe[i][1]);
         close(client_pipe[i][0]);
