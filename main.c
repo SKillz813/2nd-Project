@@ -52,7 +52,7 @@ int main() {
     }
     // Δημιουργία αναφοράς μετά την ολοκλήρωση όλων των παραγγελιών
     generate_report(catalog);
-
+    //Ο γονέας κλείνει τώρα τη θέση ανάγνωσης του pipe από το πελάτη
     for (int i = 0; i < CLIENT_COUNT; i++) {
         close(server_pipe[i][0]);
         close(client_pipe[i][1]);
